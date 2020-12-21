@@ -1,0 +1,28 @@
+{
+	"name": "@volkovasystem/code-stack",
+	"alias": "code-stack",
+	"version": "0.0.0",
+	"description": "Convert code to stack of linked node list.",
+	"main": "code-stack.js",
+	"scripts": {
+		"test": "node ./code-stack.test.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/volkovasystem/code-stack.git"
+	},
+	"keywords": [
+		"code-stack",
+		"code",
+		"stack"
+	],
+	"author": "Richeve S. Bebedor <richeve.bebedor@gmail.com>",
+	"contributors": [
+		"Richeve S. Bebedor <richeve.bebedor@gmail.com>"
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/volkovasystem/code-stack/issues"
+	},
+	"homepage": "https://github.com/volkovasystem/code-stack#readme"
+}
