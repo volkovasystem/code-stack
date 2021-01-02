@@ -34,8 +34,70 @@
 	@license:module;
 */
 
+const CodeTree = require( "./code-tree.js" );
+const CodeKey = require( "./code-key.js" );
+const CodeNode = require( "./code-node.js" );
+
+const deconstructCodePhrase = (
+	function deconstructCodePhrase( codePhrase, codeIndex, codeNamespace ){
+		const crypto = require( "crypto" );
+
+		const codeKey = (
+			CodeKey(
+				(
+					crypto
+					.createHash(
+						(
+							"sha256"
+						)
+					)
+					.update(
+						(
+							[
+								codeNamespace,
+								codeIndex,
+								(
+									codePhrase
+									.trim( )
+									.replace(
+										(
+											/^[\t\s\n\r]+|[\t\s\n\r]+$/g
+										),
+
+										(
+											""
+										)
+									)
+								)
+							]
+						)
+					)
+					.digest(
+						(
+							"base64"
+						)
+					)
+				)
+			)
+		);
+
+		const codeNode = (
+			CodeNode(
+
+			)
+		);
+
+		return	(
+					{
+						codeKey,
+						codeNode
+					}
+				);
+	}
+);
+
 const CodeStack = (
-	function CodeStack( ){
+	function CodeStack( codeContext, optionData ){
 		/*;
 			@definition:
 				@class:#CodeStack
@@ -44,9 +106,26 @@ const CodeStack = (
 					@description;
 				@class;
 
-				@parameter:#sampleParameter
+				@parameter:#codeContext
 					@type:
-							boolean
+							string
+					@type;
+
+					@description:
+					@description;
+				@parameter;
+
+				@parameter:#optionData
+					@type:
+							object:with:{
+								"codeNamespace": "
+									[
+										@type:
+												string
+										@type;
+									]
+								"
+							}
 					@type;
 
 					@description:
@@ -55,7 +134,7 @@ const CodeStack = (
 
 				@result:#result
 					@type:
-							boolean
+							object:as:CodeStack
 					@type;
 
 					@description:
@@ -70,29 +149,279 @@ const CodeStack = (
 					@description:
 					@description;
 
-					@tag:#cannot-code-stack;
+					@tag:#cannot-create-code-stack;
 				@trigger;
 			@definition;
 		*/
 
-		const util = require( "util" );
+		if(
+				(
+						(
+										this
+							instanceof	CodeStack
+						)
+					===	true
+				)
+		){
+			(
+					optionData
+				=	(
+							(
+								optionData
+							)
 
-		try{
+						||	(
+								{ }
+							)
+					)
+			);
 
-		}
-		catch( error ){
-			throw	(
-						new	Error(
+			(
+					codeNamespace
+				=	(
+							(
+								optionData
+								.codeNamespace
+							)
+
+						||	(
+								undefined
+							)
+					)
+			);
+
+			const ROOT_NODE = (
+				"@root;"
+			);
+
+			const ROOT_NODE_PATTERN = (
+				new RegExp(
+						(
+							ROOT_NODE
+						),
+
+						(
+							"gm"
+						)
+					)
+			);
+
+			(
+					this
+					.rootKey
+				=	(
+						CodeTree(
+							(
+								codeNamespace
+							)
+						)
+					)
+			);
+
+			if(
+					(
+							typeof
+							codeContext
+						==	"string"
+					)
+
+				&&	(
+							codeContext
+							.length
+						>	0
+					)
+
+				&&	(
+							ROOT_NODE_PATTERN
+							.test(
 								(
-									[
-										"#cannot-code-stack;",
+									codeContext
+								)
+							)
+						!==	true
+					)
+			){
+				(
+					[
+						ROOT_NODE
+					]
+				)
+				.concat(
+					(
+						codeContext
+						.split(
+							(
+								/\n/
+							)
+						)
+					)
+				)
+				.forEach(
+					function( codePhrase, codeIndex ){
+						const	{
+									codeKey,
+									codeNode
+								}
+							=	(
+									deconstructCodePhrase(
+										(
+											codePhrase
+										),
 
-										"cannot code stack;",
-										"cannot execute code stack;",
+										(
+											codeIndex
+										),
 
-										"@error-data:",
-										`${ util.inspect( error ) };`
-									]
+										(
+											codeNamespace
+										)
+									)
+								);
+
+						if(
+								(
+										(
+												typeof
+												codePhrase
+											==	"string"
+										)
+
+									&&	(
+												codePhrase
+												.length
+											===	0
+										)
+								)
+
+							||	(
+										(
+											/^(\n|\r|\s|\t|)+$/
+										)
+										.test(
+											(
+												codePhrase
+											)
+										)
+									===	true
+								)
+
+							||	(
+										typeof
+										codePhrase
+									==	"undefined"
+								)
+						){
+							(
+									codeNode
+									.newLineStatus
+								=	(
+										true
+									)
+							);
+
+							this
+							.set(
+								(
+									codeKey
+								),
+
+								(
+									codeNode
+								)
+							);
+
+							this
+							.rootKey
+							.push(
+								(
+									codeKey
+									.toString( )
+								)
+							);
+						}
+						else if(
+								(
+										ROOT_NODE_PATTERN
+										.test(
+											(
+												codeContext
+											)
+										)
+									!==	true
+								)
+						){
+							this
+							.set(
+								(
+									codeKey
+								),
+
+								(
+									codeNode
+								)
+							);
+
+							this
+							.rootKey
+							.push(
+								(
+									codeKey
+									.toString( )
+								)
+							);
+						}
+						else{
+							this
+							.rootKey
+							.setKey(
+								(
+									codeKey
+									.toString( )
+								)
+							);
+
+							this
+							.set(
+								(
+									this
+									.rootKey
+								),
+
+								(
+									codeNode
+								)
+							);
+						}
+					}
+				);
+			}
+			else{
+				throw	(
+							new	Error(
+									(
+										[
+											"#cannot-create-code-stack;",
+
+											"cannot create code stack;",
+											"invalid code context;",
+
+											"@code-context:",
+											`${ codeContext };`
+										]
+									)
+								)
+						);
+			}
+		}
+		else{
+			return	(
+						new	CodeStack(
+								(
+									codeContext
+								),
+
+								(
+									optionData
 								)
 							)
 					);
@@ -107,14 +436,12 @@ const CodeStackPrototype = (
 			Object
 			.create(
 				(
-					Array
+					WeakMap
 					.prototype
 				)
 			)
 		)
 );
-
-
 
 (
 		module
