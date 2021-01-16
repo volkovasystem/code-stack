@@ -54,14 +54,20 @@ const deconstructCodePhrase = (
 					.update(
 						(
 							[
-								codeNamespace,
-								codeIndex,
+								(
+									codeNamespace
+								),
+
+								(
+									codeIndex
+								),
+
 								(
 									codePhrase
 									.trim( )
 									.replace(
 										(
-											/^[\t\s\n\r]+|[\t\s\n\r]+$/g
+											/^[\n\r\s\t]+|[\n\r\s\t]+$/g
 										),
 
 										(
