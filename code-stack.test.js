@@ -367,7 +367,7 @@ const CLEAN_TEST_DIRECTORY = (
 //;	@procedure:clean-test-directory;
 //;	@code-space:template-engine;
 
-const codeStack = (
+const CodeStack = (
 	require( "./code-stack.js" )
 );
 
@@ -390,11 +390,7 @@ const TEST_SAMPLE_UNIT = (
 
 				try{
 					const actualValue = (
-						await	codeStack(
-									(
-										true
-									)
-								)
+						true
 					);
 
 					const testValue = (

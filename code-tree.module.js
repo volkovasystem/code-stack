@@ -37,7 +37,7 @@
 const CodeKey = require( "./code-key.js" );
 
 const CodeTree = (
-	function CodeTree( codeNamespace, hashKey ){
+	function CodeTree( { codeNamespace = undefined, codeKey = undefined } ){
 		/*;
 			@definition:
 				@class:#CodeTree
@@ -46,15 +46,6 @@ const CodeTree = (
 				@class;
 
 				@parameter:#codeNamespace
-					@type:
-							string
-					@type;
-
-					@description:
-					@description;
-				@parameter;
-
-				@parameter:#hashKey
 					@type:
 							string
 					@type;
@@ -85,43 +76,37 @@ const CodeTree = (
 		){
 			if(
 					(
-							typeof
-							codeNamespace
-						==	"string"
-					)
-
-				&&	(
-							codeNamespace
-							.length
-						>	0
-					)
-			){
-				(
-						this
-						.codeNamespace
-					=	(
-							codeNamespace
-						)
-				);
-			}
-
-			if(
-					(
-							typeof
-							hashKey
-						==	"string"
-					)
-
-				&&	(
-							hashKey
-							.length
-						>	0
+							(
+											codeKey
+								instanceof	CodeKey
+							)
+						===	true
 					)
 			){
 				this
-				.setKey(
+				.push(
 					(
-						hashKey
+						codeKey
+					)
+				);
+			}
+			else{
+				this
+				.push(
+					(
+						CodeKey(
+							(
+								"@root;"
+							),
+
+							(
+								Infinity
+							),
+
+							(
+								codeNamespace
+							)
+						)
 					)
 				);
 			}
@@ -130,11 +115,15 @@ const CodeTree = (
 			return	(
 						new	CodeTree(
 								(
-									codeNamespace
-								),
+									{
+										"codeNamespace": (
+											codeNamespace
+										),
 
-								(
-									hashKey
+										"codeKey": (
+											codeKey
+										)
+									}
 								)
 							)
 					);
@@ -143,7 +132,7 @@ const CodeTree = (
 );
 
 const CodeTreePrototype = (
-		CodeTreePrototype
+		CodeTree
 		.prototype
 	=	(
 			Object
@@ -158,40 +147,25 @@ const CodeTreePrototype = (
 
 (
 		CodeTreePrototype
-		.setKey
+		.toString
 	=	(
-			function setKey( hashKey ){
-				if(
-						(
-								typeof
-								hashKey
-							==	"string"
-						)
-
-					&&	(
-								hashKey
-								.length
-							>	0
-						)
-				){
-					this
-					.push(
-						(
-							hashKey
-						)
-					);
-
-					(
-							this
-							.hashKey
-						=	(
-								hashKey
-							)
-					);
-				}
-
+			function toString( ){
 				return	(
-							this
+							this[ 0 ]
+							.toString( )
+						);
+			}
+		)
+);
+
+(
+		CodeTreePrototype
+		.valueOf
+	=	(
+			function valueOf( ){
+				return	(
+							this[ 0 ]
+							.valueOf( )
 						);
 			}
 		)

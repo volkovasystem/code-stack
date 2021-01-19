@@ -35,7 +35,7 @@
 */
 
 const CodeKey = (
-	function CodeKey( hashKey ){
+	function CodeKey( codePhrase, codeIndex, codeNamespace = undefined ){
 		/*;
 			@definition:
 				@class:#CodeKey
@@ -43,7 +43,25 @@ const CodeKey = (
 					@description;
 				@class;
 
-				@parameter:#hashKey
+				@parameter:#codePhrase
+					@type:
+							string
+					@type;
+
+					@description:
+					@description;
+				@parameter;
+
+				@parameter:#codeIndex
+					@type:
+							number
+					@type;
+
+					@description:
+					@description;
+				@parameter;
+
+				@parameter:#codeNamespace
 					@type:
 							string
 					@type;
@@ -75,37 +93,141 @@ const CodeKey = (
 			if(
 					(
 							typeof
-							hashKey
+							codePhrase
 						==	"string"
 					)
 
 				&&	(
-							hashKey
+							codePhrase
 							.length
 						>	0
 					)
+
+				&&	(
+							typeof
+							codeIndex
+						==	"number"
+					)
+
+				&&	(
+							isNaN(
+								(
+									codeIndex
+								)
+							)
+						!==	true
+					)
 			){
+				const crypto = require( "crypto" );
+
 				this
 				.push(
 					(
-						hashKey
+						crypto
+						.createHash(
+							(
+								"sha256"
+							)
+						)
+						.update(
+							(
+								codePhrase
+								.trim( )
+								.replace(
+									(
+										/^[\n\r\s\t]+|[\n\r\s\t]+$/g
+									),
+
+									(
+										""
+									)
+								)
+							)
+						)
+						.digest(
+							(
+								"base64"
+							)
+						)
 					)
 				);
 
-				(
-						this
-						.hashKey
-					=	(
-							hashKey
+				this
+				.push(
+					(
+						crypto
+						.createHash(
+							(
+								"sha256"
+							)
 						)
+						.update(
+							(
+								(
+									[
+										(
+											codeNamespace
+										),
+
+										(
+											codeIndex
+										)
+									]
+								)
+								.filter(
+									(
+										Boolean
+									)
+								)
+								.join(
+									(
+										":"
+									)
+								)
+							)
+						)
+						.digest(
+							(
+								"base64"
+							)
+						)
+					)
 				);
+			}
+			else{
+				throw	(
+							new	Error(
+									(
+										[
+											"#cannot-create-code-key;",
+
+											"cannot create code key;",
+											"invalid parameter;",
+
+											"@code-phrase:",
+											`${ codePhrase };`,
+
+											"@code-index:",
+											`${ codeIndex };`
+										]
+									)
+								)
+						);
 			}
 		}
 		else{
 			return	(
 						new	CodeKey(
 								(
-									hashKey
+									codePhrase
+								),
+
+								(
+									codeIndex
+								),
+
+								(
+									codeNamespace
 								)
 							)
 					);
@@ -114,7 +236,7 @@ const CodeKey = (
 );
 
 const CodeKeyPrototype = (
-		CodeKeyPrototype
+		CodeKey
 		.prototype
 	=	(
 			Object
@@ -133,9 +255,8 @@ const CodeKeyPrototype = (
 	=	(
 			function toString( ){
 				return	(
-							this
-							.hashKey
-						)
+							this[ 0 ]
+						);
 			}
 		)
 );
@@ -146,9 +267,8 @@ const CodeKeyPrototype = (
 	=	(
 			function valueOf( ){
 				return	(
-							this
-							.hashKey
-						)
+							this[ 1 ]
+						);
 			}
 		)
 );

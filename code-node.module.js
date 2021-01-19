@@ -35,12 +35,11 @@
 */
 
 const CodeNode = (
-	function CodeNode( codePhrase, codeIndex, codeNamespace ){
+	function CodeNode( codePhrase, codeIndex, codeNamespace = undefined ){
 		/*;
 			@definition:
 				@class:#CodeNode
 					@description:
-
 					@description;
 				@class;
 
@@ -91,29 +90,92 @@ const CodeNode = (
 					===	true
 				)
 		){
-			(
-					this
-					.codePhrase
-				=	(
-						codePhrase
+			if(
+					(
+							typeof
+							codePhrase
+						==	"string"
 					)
-			);
 
-			(
-					this
-					.codeIndex
-				=	(
-						codeIndex
+				&&	(
+							codePhrase
+							.length
+						>	0
 					)
-			);
 
-			(
-					this
-					.codeNamespace
-				=	(
-						codeNamespace
+				&&	(
+							typeof
+							codeIndex
+						==	"number"
 					)
-			);
+
+				&&	(
+							isNaN(
+								(
+									codeIndex
+								)
+							)
+						!==	true
+					)
+			){
+				(
+						this
+						.codePhrase
+					=	(
+							codePhrase
+						)
+				);
+
+				(
+						this
+						.codeIndex
+					=	(
+							codeIndex
+						)
+				);
+
+				if(
+						(
+								typeof
+								codeNamespace
+							==	"string"
+						)
+
+					&&	(
+								codeNamespace
+								.length
+							>	0
+						)
+				){
+					(
+							this
+							.codeNamespace
+						=	(
+								codeNamespace
+							)
+					);
+				}
+			}
+			else{
+				throw	(
+							new	Error(
+									(
+										[
+											"#cannot-create-code-node;",
+
+											"cannot create code node;",
+											"invalid parameter;",
+
+											"@code-phrase:",
+											`${ codePhrase };`,
+
+											"@code-index:",
+											`${ codeIndex };`
+										]
+									)
+								)
+						);
+			}
 		}
 		else{
 			return	(
@@ -136,7 +198,7 @@ const CodeNode = (
 );
 
 const CodeNodePrototype = (
-		CodeNodePrototype
+		CodeNode
 		.prototype
 	=	(
 			Object
@@ -145,13 +207,30 @@ const CodeNodePrototype = (
 					{
 						"toString": (
 							function toString( ){
-
+								return	(
+											this
+											.codePhrase
+										);
 							}
 						),
 
 						"valueOf": (
 							function valueOf( ){
+								return	(
+											{
+												"codePhrase": (
+													codePhrase
+												),
 
+												"codeIndex": (
+													codeIndex
+												),
+
+												"codeNamespace": (
+													codeNamespace
+												)
+											}
+										);
 							}
 						)
 					}

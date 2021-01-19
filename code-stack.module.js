@@ -38,72 +38,8 @@ const CodeTree = require( "./code-tree.js" );
 const CodeKey = require( "./code-key.js" );
 const CodeNode = require( "./code-node.js" );
 
-const deconstructCodePhrase = (
-	function deconstructCodePhrase( codePhrase, codeIndex, codeNamespace ){
-		const crypto = require( "crypto" );
-
-		const codeKey = (
-			CodeKey(
-				(
-					crypto
-					.createHash(
-						(
-							"sha256"
-						)
-					)
-					.update(
-						(
-							[
-								(
-									codeNamespace
-								),
-
-								(
-									codeIndex
-								),
-
-								(
-									codePhrase
-									.trim( )
-									.replace(
-										(
-											/^[\n\r\s\t]+|[\n\r\s\t]+$/g
-										),
-
-										(
-											""
-										)
-									)
-								)
-							]
-						)
-					)
-					.digest(
-						(
-							"base64"
-						)
-					)
-				)
-			)
-		);
-
-		const codeNode = (
-			CodeNode(
-
-			)
-		);
-
-		return	(
-					{
-						codeKey,
-						codeNode
-					}
-				);
-	}
-);
-
 const CodeStack = (
-	function CodeStack( codeContext, optionData ){
+	function CodeStack( codeContext, optionData = { } ){
 		/*;
 			@definition:
 				@class:#CodeStack
@@ -170,19 +106,6 @@ const CodeStack = (
 				)
 		){
 			(
-					optionData
-				=	(
-							(
-								optionData
-							)
-
-						||	(
-								{ }
-							)
-					)
-			);
-
-			(
 					codeNamespace
 				=	(
 							(
@@ -196,31 +119,38 @@ const CodeStack = (
 					)
 			);
 
-			const ROOT_NODE = (
-				"@root;"
+			const rootKey = (
+				CodeTree(
+					(
+						{
+							"codeNamespace": (
+								codeNamespace
+							)
+						}
+					)
+				)
 			);
 
-			const ROOT_NODE_PATTERN = (
-				new RegExp(
-						(
-							ROOT_NODE
-						),
+			this
+			.set(
+				(
+					rootKey
+				),
 
-						(
-							"gm"
-						)
-					)
+				(
+					rootKey
+				)
 			);
 
 			(
 					this
 					.rootKey
 				=	(
-						CodeTree(
-							(
-								codeNamespace
+						new	Proxy(
+								(
+									rootKey
+								)
 							)
-						)
 					)
 			);
 
@@ -236,40 +166,48 @@ const CodeStack = (
 							.length
 						>	0
 					)
-
-				&&	(
-							ROOT_NODE_PATTERN
-							.test(
-								(
-									codeContext
-								)
-							)
-						!==	true
-					)
 			){
-				(
-					[
-						ROOT_NODE
-					]
-				)
-				.concat(
+				codeContext
+				.split(
 					(
-						codeContext
-						.split(
-							(
-								/\n/
-							)
-						)
+						/\n/
 					)
 				)
 				.forEach(
-					function( codePhrase, codeIndex ){
-						const	{
-									codeKey,
-									codeNode
-								}
-							=	(
-									deconstructCodePhrase(
+					(
+						( codePhrase, codeIndex ) => {
+							const codeKey = (
+								CodeKey(
+									(
+										codePhrase
+									),
+
+									(
+										codeIndex
+									),
+
+									(
+										codeNamespace
+									)
+								)
+							);
+
+							this
+							.rootKey
+							.push(
+								(
+									codeKey
+								)
+							);
+
+							this
+							.set(
+								(
+									codeKey
+								),
+
+								(
+									CodeNode(
 										(
 											codePhrase
 										),
@@ -282,123 +220,10 @@ const CodeStack = (
 											codeNamespace
 										)
 									)
-								);
-
-						if(
-								(
-										(
-												typeof
-												codePhrase
-											==	"string"
-										)
-
-									&&	(
-												codePhrase
-												.length
-											===	0
-										)
-								)
-
-							||	(
-										(
-											/^(\n|\r|\s|\t|)+$/
-										)
-										.test(
-											(
-												codePhrase
-											)
-										)
-									===	true
-								)
-
-							||	(
-										typeof
-										codePhrase
-									==	"undefined"
-								)
-						){
-							(
-									codeNode
-									.newLineStatus
-								=	(
-										true
-									)
-							);
-
-							this
-							.set(
-								(
-									codeKey
-								),
-
-								(
-									codeNode
-								)
-							);
-
-							this
-							.rootKey
-							.push(
-								(
-									codeKey
-									.toString( )
 								)
 							);
 						}
-						else if(
-								(
-										ROOT_NODE_PATTERN
-										.test(
-											(
-												codeContext
-											)
-										)
-									!==	true
-								)
-						){
-							this
-							.set(
-								(
-									codeKey
-								),
-
-								(
-									codeNode
-								)
-							);
-
-							this
-							.rootKey
-							.push(
-								(
-									codeKey
-									.toString( )
-								)
-							);
-						}
-						else{
-							this
-							.rootKey
-							.setKey(
-								(
-									codeKey
-									.toString( )
-								)
-							);
-
-							this
-							.set(
-								(
-									this
-									.rootKey
-								),
-
-								(
-									codeNode
-								)
-							);
-						}
-					}
+					)
 				);
 			}
 			else{
@@ -436,7 +261,7 @@ const CodeStack = (
 );
 
 const CodeStackPrototype = (
-		CodeStackPrototype
+		CodeStack
 		.prototype
 	=	(
 			Object
