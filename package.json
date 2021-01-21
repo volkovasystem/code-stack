@@ -7,7 +7,7 @@
 	"scripts": {
 		"clean": "rm -rf ./node_modules || true && rm -fv ./package-lock.json || true && npm cache clean --force",
 		"reset": "npm run clean && rm -rfv ./code-stack.js || true && rm -rfv ./.build || true && rm -rfv ./.test || true",
-		"bundle": "npx parcel build ./*.module.js --no-cache --no-source-maps --no-minify --out-dir ./.build --out-file ./code-stack.bundle.js --global CodeStack",
+		"bundle": "npx parcel build ./*.module.js --no-cache --no-source-maps --no-minify --target node --out-dir ./.build --out-file ./code-stack.bundle.js --global CodeStack",
 		"compress": "npx terser ./.build/code-stack.bundle.js --compress --keep-classnames --keep-fnames --output ./.build/code-stack.js",
 		"resolve": "mv ./.build/code-stack.js ./code-stack.js && rm -rfv ./.build || true",
 		"build": "npm run bundle && npm run compress && npm run resolve",
