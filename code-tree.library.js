@@ -34,7 +34,7 @@
 	@license:module;
 */
 
-const CodeKey = require( "./code-key.js" );
+const CodeKey = require( "./code-key.library.js" );
 
 const CodeTree = (
 	function CodeTree( { codeNamespace = undefined, codeKey = undefined } ){

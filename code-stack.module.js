@@ -34,9 +34,9 @@
 	@license:module;
 */
 
-const CodeTree = require( "./code-tree.js" );
-const CodeKey = require( "./code-key.js" );
-const CodeNode = require( "./code-node.js" );
+const CodeTree = require( "./code-tree.library.js" );
+const CodeKey = require( "./code-key.library.js" );
+const CodeNode = require( "./code-node.library.js" );
 
 const CodeStack = (
 	function CodeStack( codeContext, optionData = { } ){
