@@ -35,8 +35,9 @@
 */
 
 const CodeTree = require( "./code-tree.library.js" );
-const CodeKey = require( "./code-key.library.js" );
 const CodeNode = require( "./code-node.library.js" );
+const CodeKey = require( "./code-key.library.js" );
+const CodeValue = require( "./code-value.library.js" );
 
 const CodeStack = (
 	function CodeStack( codeContext, optionData = { } ){
@@ -105,17 +106,14 @@ const CodeStack = (
 					===	true
 				)
 		){
-			(
-					codeNamespace
-				=	(
-							(
-								optionData
-								.codeNamespace
-							)
+			const codeNamespace = (
+					(
+						optionData
+						.codeNamespace
+					)
 
-						||	(
-								undefined
-							)
+				||	(
+						undefined
 					)
 			);
 
@@ -132,13 +130,17 @@ const CodeStack = (
 			);
 
 			this
-			.set(
+			.push(
 				(
-					rootKey
-				),
+					CodeNode(
+						(
+							rootKey
+						),
 
-				(
-					rootKey
+						(
+							rootKey
+						)
+					)
 				)
 			);
 
@@ -149,6 +151,10 @@ const CodeStack = (
 						new	Proxy(
 								(
 									rootKey
+								),
+
+								(
+									{ }
 								)
 							)
 					)
@@ -176,6 +182,27 @@ const CodeStack = (
 				.forEach(
 					(
 						( codePhrase, codeIndex ) => {
+							if(
+									(
+											typeof
+											codePhrase
+										==	"string"
+									)
+
+								&&	(
+											codePhrase
+											.length
+										===	0
+									)
+							){
+								(
+										codePhrase
+									=	(
+											"@new-line;"
+										)
+								);
+							}
+
 							const codeKey = (
 								CodeKey(
 									(
@@ -201,23 +228,27 @@ const CodeStack = (
 							);
 
 							this
-							.set(
-								(
-									codeKey
-								),
-
+							.push(
 								(
 									CodeNode(
 										(
-											codePhrase
+											codeKey
 										),
 
 										(
-											codeIndex
-										),
+											CodeValue(
+												(
+													codePhrase
+												),
 
-										(
-											codeNamespace
+												(
+													codeIndex
+												),
+
+												(
+													codeNamespace
+												)
+											)
 										)
 									)
 								)
@@ -267,7 +298,7 @@ const CodeStackPrototype = (
 			Object
 			.create(
 				(
-					WeakMap
+					Array
 					.prototype
 				)
 			)

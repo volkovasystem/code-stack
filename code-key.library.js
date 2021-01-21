@@ -102,21 +102,6 @@ const CodeKey = (
 							.length
 						>	0
 					)
-
-				&&	(
-							typeof
-							codeIndex
-						==	"number"
-					)
-
-				&&	(
-							isNaN(
-								(
-									codeIndex
-								)
-							)
-						!==	true
-					)
 			){
 				const crypto = require( "crypto" );
 
@@ -151,6 +136,42 @@ const CodeKey = (
 						)
 					)
 				);
+			}
+			else{
+				throw	(
+							new	Error(
+									(
+										[
+											"#cannot-create-code-key;",
+
+											"cannot create code key;",
+											"invalid code phrase parameter;",
+
+											"@code-phrase:",
+											`${ codePhrase };`
+										]
+									)
+								)
+						);
+			}
+
+			if(
+					(
+							typeof
+							codeIndex
+						==	"number"
+					)
+
+				&&	(
+							isNaN(
+								(
+									codeIndex
+								)
+							)
+						!==	true
+					)
+			){
+				const crypto = require( "crypto" );
 
 				this
 				.push(
@@ -202,10 +223,7 @@ const CodeKey = (
 											"#cannot-create-code-key;",
 
 											"cannot create code key;",
-											"invalid parameter;",
-
-											"@code-phrase:",
-											`${ codePhrase };`,
+											"invalid code key parameter;",
 
 											"@code-index:",
 											`${ codeIndex };`

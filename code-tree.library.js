@@ -54,6 +54,15 @@ const CodeTree = (
 					@description;
 				@parameter;
 
+				@parameter:#codeKey
+					@type:
+							object:as:CodeKey
+					@type;
+
+					@description:
+					@description;
+				@parameter;
+
 				@result:#result
 					@type:
 							object:as:CodeTree

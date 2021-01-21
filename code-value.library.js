@@ -34,31 +34,36 @@
 	@license:module;
 */
 
-const CodeKey = require( "./code-key.library.js" );
-const CodeValue = require( "./code-value.library.js" );
-
-const CodeNode = (
-	function CodeNode( codeKey, codeValue ){
+const CodeValue = (
+	function CodeValue( codePhrase, codeIndex, codeNamespace = undefined ){
 		/*;
 			@definition:
-				@class:#CodeNode
+				@class:#CodeValue
 					@description:
 					@description;
 				@class;
 
-				@parameter:#codeKey
+				@parameter:#codePhrase
 					@type:
-							object:as:CodeKey
+							string
 					@type;
 
 					@description:
 					@description;
 				@parameter;
 
-				@parameter:#codeValue
+				@parameter:#codeIndex
 					@type:
-							object:as:CodeValue
-						|	object
+							number
+					@type;
+
+					@description:
+					@description;
+				@parameter;
+
+				@parameter:#codeNamespace
+					@type:
+							string
 					@type;
 
 					@description:
@@ -67,7 +72,7 @@ const CodeNode = (
 
 				@result:#result
 					@type:
-							object:as:CodeNode
+							object:as:CodeValue
 					@type;
 
 					@description:
@@ -80,24 +85,28 @@ const CodeNode = (
 				(
 						(
 										this
-							instanceof	CodeNode
+							instanceof	CodeValue
 						)
 					===	true
 				)
 		){
 			if(
 					(
-							(
-											codeKey
-								instanceof	CodeKey
-							)
-						===	true
+							typeof
+							codePhrase
+						==	"string"
+					)
+
+				&&	(
+							codePhrase
+							.length
+						>	0
 					)
 			){
 				this
 				.push(
 					(
-						codeKey
+						codePhrase
 					)
 				);
 			}
@@ -106,13 +115,13 @@ const CodeNode = (
 							new	Error(
 									(
 										[
-											"#cannot-create-code-node;",
+											"#cannot-create-code-value;",
 
-											"cannot create code node;",
-											"invalid code key parameter;",
+											"cannot create code value;",
+											"invalid code phrase parameter;",
 
-											"@code-key:",
-											`${ codeKey };`
+											"@code-phrase:",
+											`${ codePhrase };`
 										]
 									)
 								)
@@ -121,30 +130,24 @@ const CodeNode = (
 
 			if(
 					(
-							(
-											codeValue
-								instanceof	CodeValue
-							)
-						===	true
+							typeof
+							codeIndex
+						==	"number"
 					)
 
-				||	(
-							(
-									typeof
-									codeValue
-								==	"object"
+				&&	(
+							isNaN(
+								(
+									codeIndex
+								)
 							)
-
-						&&	(
-									codeValue
-								!==	null
-							)
+						!==	true
 					)
 			){
 				this
 				.push(
 					(
-						codeValue
+						codeIndex
 					)
 				);
 			}
@@ -153,28 +156,53 @@ const CodeNode = (
 							new	Error(
 									(
 										[
-											"#cannot-create-code-node;",
+											"#cannot-create-code-value;",
 
-											"cannot create code node;",
-											"invalid code value parameter;",
+											"cannot create code value;",
+											"invalid code index parameter;",
 
-											"@code-value:",
-											`${ codeValue };`
+											"@code-index:",
+											`${ codeIndex };`
 										]
 									)
 								)
 						);
 			}
+
+			if(
+					(
+							typeof
+							codeNamespace
+						==	"string"
+					)
+
+				&&	(
+							codeNamespace
+							.length
+						>	0
+					)
+			){
+				this
+				.push(
+					(
+						codeNamespace
+					)
+				);
+			}
 		}
 		else{
 			return	(
-						new	CodeNode(
+						new	CodeValue(
 								(
-									codeKey
+									codePhrase
 								),
 
 								(
-									codeValue
+									codeIndex
+								),
+
+								(
+									codeNamespace
 								)
 							)
 					);
@@ -182,8 +210,8 @@ const CodeNode = (
 	}
 );
 
-const CodeNodePrototype = (
-		CodeNode
+const CodeValuePrototype = (
+		CodeValue
 		.prototype
 	=	(
 			Object
@@ -197,25 +225,34 @@ const CodeNodePrototype = (
 );
 
 (
-		CodeNodePrototype
+		CodeValuePrototype
 		.toString
 	=	(
 			function toString( ){
 				return	(
 							this[ 0 ]
-							.toString( )
 						);
 			}
 		)
 );
 
 (
-		CodeNodePrototype
+		CodeValuePrototype
 		.valueOf
 	=	(
 			function valueOf( ){
 				return	(
-							this[ 1 ]
+							Object
+							.freeze(
+								(
+									Array
+									.from(
+										(
+											this
+										)
+									)
+								)
+							)
 						);
 			}
 		)
@@ -225,6 +262,6 @@ const CodeNodePrototype = (
 		module
 		.exports
 	=	(
-			CodeNode
+			CodeValue
 		)
 );
